@@ -15,7 +15,6 @@ from random import choice
 import re
 from telethon import events
 from userbot import CMD_HELP, bot
-from userbot.plugins import waifutxt , deEmojify
 import pybase64
 from telethon.tl.functions.messages import ImportChatInviteRequest
 # RegEx by https://t.me/c/1220993104/500653 ( @SnapDragon7410 )
@@ -36,14 +35,13 @@ async def sticklet(event):
         reply_message = await event.get_reply_message()
         sticktext = reply_message.message
     elif not sticktext:
-        await event.edit("`I Need Text .....`")
+        await event.edit("need something, hmm")
         return
     if event.reply_to_msg_id:
         reply_message = await event.get_reply_message()
     # delete the userbot command,
     # i don't know why this is required
     await event.delete()
-    sticktext = deEmojify(sticktext)
     # https://docs.python.org/3/library/textwrap.html#textwrap.wrap
     sticktext = textwrap.wrap(sticktext, width=10)
     # converts back the list to a string
@@ -59,17 +57,17 @@ async def sticklet(event):
     width, height = draw.multiline_textsize(sticktext, font=font)
     draw.multiline_text(((512-width)/2,(512-height)/2), sticktext, font=font, fill=(R, G, B))
     image_stream = io.BytesIO()
-    image_stream.name = "@fridayot.webp"
+    image_stream.name = "@friday.webp"
     image.save(image_stream, "WebP")
     image_stream.seek(0)
     # finally, reply the sticker
-    await event.client.send_file(event.chat_id, image_stream, caption="cat's Sticklet", reply_to=event.message.reply_to_msg_id)
+    await event.client.send_file(event.chat_id, image_stream, caption="FridayOT", reply_to=event.message.reply_to_msg_id)
     # cleanup
     try:
         os.remove(FONT_FILE)
     except:
         pass
-
+    
     
 @borg.on(sudo_cmd(pattern="stcr ?(?:(.*?) \| )?(.*)", allow_sudo=True))
 async def sticklet(event):
@@ -113,7 +111,7 @@ async def sticklet(event):
     image.save(image_stream, "WebP")
     image_stream.seek(0)
     # finally, reply the sticker
-    await event.client.send_file(event.chat_id, image_stream, caption="cat's Sticklet", reply_to=event.message.reply_to_msg_id)
+    await event.client.send_file(event.chat_id, image_stream, caption="FridayOT", reply_to=event.message.reply_to_msg_id)
     # cleanup
     try:
         os.remove(FONT_FILE)
@@ -135,3 +133,12 @@ async def get_font_file(client, channel_id, search_kw=""):
     font_file_message = random.choice(font_file_message_s)
     # download and return the file path
     return await client.download_media(font_file_message)
+
+#EMOJI_PATTERN = re.compile(
+   # """Remove emojis and other non-safe characters from string"""
+   # return re.sub(EMOJI_PATTERN, '', inputString)
+
+#def deEmojify(inputString: str) -> str:
+  #  """Remove emojis and other non-safe characters from string"""
+    #return re.sub(EMOJI_PATTERN, '', inputString)
+
