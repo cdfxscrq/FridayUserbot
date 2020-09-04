@@ -6,16 +6,17 @@ from telethon.tl.functions.photos import GetUserPhotosRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import MessageEntityMentionName
 from telethon.utils import get_input_location
-from userbot.utils import admin_cmd
+from userbot.utils import admin_cmd, sudo_cmd, edit_or_reply
 
 
 @borg.on(admin_cmd("info ?(.*)"))
+@borg.on(sudo_cmd("info ?(.*)", allow_sudo=True))
 async def _(event):
     if event.fwd_from:
         return
     replied_user, error_i_a = await get_full_user(event)
     if replied_user is None:
-        await event.edit(str(error_i_a))
+        await edit_or_reply(event, str(error_i_a))
         return False
     replied_user_profile_photos = await borg(GetUserPhotosRequest(
         user_id=replied_user.user.id,
