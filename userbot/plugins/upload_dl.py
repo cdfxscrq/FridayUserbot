@@ -17,6 +17,7 @@ from telethon.tl.types import DocumentAttributeVideo
 
 from userbot import LOGS, CMD_HELP, TEMP_DOWNLOAD_DIRECTORY
 from userbot.events import register
+from userbot.utils import admin_cmd, sudo_cmd, edit_or_reply
 
 
 async def progress(current, total, event, start, type_of_ps, file_name=None):
@@ -76,11 +77,12 @@ def time_formatter(milliseconds: int) -> str:
         ((str(milliseconds) + " millisecond(s), ") if milliseconds else "")
     return tmp[:-2]
 
-
-@register(pattern=r".dl(?: |$)(.*)", outgoing=True)
+@borg.on(admin_cmd(pattern="download(?: |$)(.*)", outgoing=True))
+@borg.on(sudo_cmd(pattern="download(?: |$)(.*)", allow_sudo=True))
 async def download(target_file):
     """ For .dl command, download files to the userbot's server. """
-    await target_file.edit("Processing using userbot server ( ◜‿◝ )♡")
+    friday = await edit_or_reply(target_file ,"`Processing ...`")
+    await friday.edit("Processing using userbot server ( ◜‿◝ )♡")
     input_str = target_file.pattern_match.group(1)
     if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
@@ -125,15 +127,15 @@ async def download(target_file):
 
                 if round(diff %
                          10.00) == 0 and current_message != display_message:
-                    await target_file.edit(current_message)
+                    await friday.edit(current_message)
                     display_message = current_message
             except Exception as e:
                 LOGS.info(str(e))
         if downloader.isSuccessful():
-            await target_file.edit("Downloaded to `{}` successfully !!".format(
+            await friday.edit("Downloaded to `{}` successfully !!".format(
                 downloaded_file_name))
         else:
-            await target_file.edit("Incorrect URL\n{}".format(url))
+            await friday.edit("Incorrect URL\n{}".format(url))
     elif target_file.reply_to_msg_id:
         try:
             c_time = time.time()
@@ -144,13 +146,12 @@ async def download(target_file):
                 ).create_task(
                     progress(d, t, target_file, c_time, "Downloading...")))
         except Exception as e:  # pylint:disable=C0103,W0703
-            await target_file.edit(str(e))
+            await friday.edit(str(e))
         else:
-            await target_file.edit("Downloaded to `{}` successfully !!".format(
+            await friday.edit("Downloaded to `{}` successfully !!".format(
                 downloaded_file_name))
     else:
-        await target_file.edit(
-            "Reply to a message to download to my local server.")
+        await friday.edit("Reply to a message to download to my local server.")
 
 
 @register(pattern=r".uploadir (.*)", outgoing=True)
