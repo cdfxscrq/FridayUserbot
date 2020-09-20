@@ -19,7 +19,6 @@ class Var(object):
     TG_BOT_TOKEN_BF_HER = os.environ.get("TG_BOT_TOKEN_BF_HER", None)
     # Send .get_id in any channel to fill this value.
     PLUGIN_CHANNEL = int(os.environ.get("PLUGIN_CHANNEL", -100))
-    NEWS_CHANNEL_ID = int(os.environ.get("NEWS_CHANNEL_ID"‌, None))
     PRIVATE_GROUP_BOT_API_ID = int(os.environ.get("PRIVATE_GROUP_BOT_API_ID", -100))
     TG_BOT_USER_NAME_BF_HER = os.environ.get("TG_BOT_USER_NAME_BF_HER", None)
     NO_SONGS = bool(os.environ.get("NO_SONGS", False))
@@ -36,6 +35,6 @@ class Var(object):
         t_file.write(AUTH_TOKEN_DATA)
         t_file.close()
     PRIVATE_GROUP_ID = int(os.environ.get("PRIVATE_GROUP_ID", None))
+    NEWS_CHANNEL_ID = int(os.environ.get("NEWS_CHANNEL_ID", -100))
 class Development(Var):
     LOGGER = True
-    # Here for later purposes like uniborg config
