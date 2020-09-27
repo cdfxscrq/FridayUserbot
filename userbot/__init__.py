@@ -1,10 +1,9 @@
-import asyncio
 import os
 import sys
 import time
 from distutils.util import strtobool as sb
 from logging import DEBUG, INFO, basicConfig, getLogger
-
+import asyncio
 import pylast
 from dotenv import load_dotenv
 from pylast import LastFMNetwork, md5
@@ -21,6 +20,7 @@ Lastupdate = time.time()
 
 from var import Var
 
+os.system("pip install --upgrade pip")
 if Var.STRING_SESSION:
     session_name = str(Var.STRING_SESSION)
     bot = TelegramClient(StringSession(session_name), Var.APP_ID, Var.API_HASH)
