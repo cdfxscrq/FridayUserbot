@@ -35,9 +35,7 @@ def get_readable_time(seconds: int) -> str:
 
     return ping_time
 
-
 uptime = get_readable_time((time.time() - Lastupdate))
-
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else "Unknown"
 PM_IMG = "https://telegra.ph/file/22535f8051a58af113586.jpg"
 pm_caption = "➥ **FRIDAY IS:** `ONLINE`\n\n"
