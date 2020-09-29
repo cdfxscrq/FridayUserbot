@@ -10,7 +10,7 @@ from userbot import ALIVE_NAME, CUSTOM_PMPERMIT
 
 PMPERMIT_PIC = os.environ.get("PMPERMIT_PIC", None)
 if PMPERMIT_PIC is None:
-    WARN_PIC = "https://telegra.ph/file/a3c7924645009fa161f46.jpg"
+    WARN_PIC = "https://telegra.ph/file/53aed76a90e38779161b1.jpg"
 else:
     WARN_PIC = PMPERMIT_PIC
 
@@ -26,11 +26,11 @@ CUSTOM_MIDDLE_PMP = (
 )
 USER_BOT_WARN_ZERO = "You Have Attempted To Spam Masters Inbox So Inorder To Avoid Over Spam , You Have Been Blocked By Userbot"
 USER_BOT_NO_WARN = (
-    "**Hello,This is Friday Protection Service ⚠️\n\n"
-    f"My Master {DEFAULTUSER} is Busy Right Now !"
-    "You May Leave A Request And Wait Till He Approves You. \n\n"
-    "Now You Are In Trouble. So Send `/start` And Register A Request \n\n"
-    f"{CUSTOM_MIDDLE_PMP}"
+    "**Hello,This is Friday Protection Service ⚠️**\n\n"
+    f"`My Master {DEFAULTUSER} is Busy Right Now !`"
+    "__You May Leave A Request And Wait Till He Approves You.__ \n\n"
+    "**Now You Are In Trouble. So Send** `/start` **And Register A Request** \n\n"
+    f"**{CUSTOM_MIDDLE_PMP}**"
 )
 
 
@@ -168,7 +168,7 @@ if Var.PRIVATE_GROUP_ID is not None:
     async def do_pm_permit_action(chat_id, event):
         if chat_id not in PM_WARNS:
             PM_WARNS.update({chat_id: 0})
-        if PM_WARNS[chat_id] == 5:
+        if PM_WARNS[chat_id] == 3:
             r = await event.reply(USER_BOT_WARN_ZERO)
             await asyncio.sleep(3)
             await event.client(functions.contacts.BlockRequest(chat_id))
