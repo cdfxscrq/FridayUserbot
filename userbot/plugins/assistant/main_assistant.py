@@ -61,6 +61,10 @@ async def start(event):
             ]
            )
     else:
+        add_usersid_in_db(
+            event.from_id
+        )
+
         await tgbot.send_message(
            event.chat_id,
            message=starttext,
@@ -86,6 +90,7 @@ async def help(event):
                 [Button.url("Need Help ❓", "t.me/FridaySupportOfficial")]
                  ]
                 )
+
 
 
 @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"users")))
@@ -134,10 +139,6 @@ async def all_messages_catcher(event):
             sed.id,
             event.from_id,
             event.id
-        )
-
-        add_usersid_in_db(
-            event.from_id
         )
 
 
