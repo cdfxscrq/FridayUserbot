@@ -1,12 +1,54 @@
-# GOT FROM HERE https://t.me/pldhsys/358 ( JAVES USERBOT ) ( MAIN CREATOR )
-# PORTED BY @STARKXD
 from telethon.tl.functions.contacts import BlockRequest, UnblockRequest
+from userbot.utils import admin_cmd
+import html
+from telethon import events
+from telethon.tl.functions.photos import GetUserPhotosRequest
+from telethon.tl.functions.users import GetFullUserRequest
+from telethon.tl.types import MessageEntityMentionName
+from telethon.utils import get_input_location
+from telethon.events import ChatAction
 
-from userbot import CMD_HELP
+async def get_full_user(event):  
+    args = event.pattern_match.group(1).split(':', 1)
+    extra = None
+    if event.reply_to_msg_id and not len(args) == 2:
+        previous_message = await event.get_reply_message()
+        user_obj = await event.client.get_entity(previous_message.from_id)
+        extra = event.pattern_match.group(1)
+    elif len(args[0]) > 0:
+        user = args[0]
+        if len(args) == 2:
+            extra = args[1]
+        if user.isnumeric():
+            user = int(user)
+        if not user:
+            await event.edit("`User ID Is Required")
+            return
+        if event.message.entities is not None:
+            probable_user_mention_entity = event.message.entities[0]
+            if isinstance(probable_user_mention_entity,
+                          MessageEntityMentionName):
+                user_id = probable_user_mention_entity.user_id
+                user_obj = await event.client.get_entity(user_id)
+                return user_obj
+        try:
+            user_obj = await event.client.get_entity(user)
+        except Exception as err:
+            return await event.edit("Something Went Wrong", str(err))           
+    return user_obj, extra
 
 
-# @javes.on(rekcah05(pattern=f"gban(?: |$)(.*)", allow_sudo=True))
-@command(outgoing=True, pattern="^.gban(?: |$)(.*)")
+async def get_user_from_id(user, event):
+    if isinstance(user, str):
+        user = int(user)
+    try:
+        user_obj = await event.client.get_entity(user)
+    except (TypeError, ValueError) as err:
+        await event.edit(str(err))
+        return None
+    return user_obj
+
+@borg.on(admin_cmd(pattern="gban ?(.*)"))
 async def gspider(userbot):
     lol = userbot
     sender = await lol.get_sender()
@@ -27,14 +69,14 @@ async def gspider(userbot):
     else:
         userbot.chat.title
     try:
-        user, reason = await get_user_from_event(userbot)
+        user, reason = await get_full_user(userbot)
     except:
         pass
     try:
         if not reason:
             reason = "Private"
     except:
-        return await friday.edit(f"**You Cant Use In Pvt Chats // Group!**")
+        return await friday.edit(f"**Something W3NT Wrong 🤔**")
     if user:
         if user.id == 1263617196:
             return await friday.edit(
@@ -72,8 +114,7 @@ async def gspider(userbot):
     )
 
 
-# @javes.on(rekcah05(pattern=f"ungban(?: |$)(.*)", allow_sudo=True))
-@command(outgoing=True, pattern="^.ungban(?: |$)(.*)")
+@borg.on(admin_cmd(pattern="ungban ?(.*)"))
 async def gspider(userbot):
     lol = userbot
     sender = await lol.get_sender()
@@ -94,14 +135,14 @@ async def gspider(userbot):
     else:
         userbot.chat.title
     try:
-        user, reason = await get_user_from_event(userbot)
+        user, reason = await get_full_user(userbot)
     except:
         pass
     try:
         if not reason:
             reason = "Private"
     except:
-        return await friday.edit("Use In Public Chats , Or In PM")
+        return await friday.edit("Someting Went Wrong 🤔")
     if user:
         if user.id == 1263617196:
             return await friday.edit("**You Cant Ungban A Dev !**")
@@ -137,17 +178,30 @@ async def gspider(userbot):
     )
 
 
-CMD_HELP.update(
-    {
-        "gban-gmute": ".gban <username> / <userid> / <reply to a user>\
-\n**Usage**: Globel ban the person in all groups, channels , block in pm , add gban watch (use with solution) \
-\n\n.ungban <username> / <userid> / <reply to a user>\
-\n**Usage**: unban user from all groups, channels , remove user from gban watch.\
-\n\n.gmute <username> / <userid> / <reply to a user>\
-\n**Usage**: Globel mute the user  \
-\n\n.ungmute <username> / <userid> / <reply to a user>\
-\n**Usage**: Remove user form gmute list \
-\n\n**All commands support sudo**\
-"
-    }
-)
+
+
+@borg.on(ChatAction)
+async def handler(rkG): 
+   if rkG.user_joined or rkG.user_added:      
+       try:       	
+         from userbot.modules.sql_helper.gmute_sql import is_gmuted
+         guser = await rkG.get_user()      
+         gmuted = is_gmuted(guser.id)             
+       except:      
+          return
+       if gmuted:
+        for i in gmuted:
+            if i.sender == str(guser.id):                                                                         
+                chat = await rkG.get_chat()
+                admin = chat.admin_rights
+                creator = chat.creator   
+                if admin or creator:
+                 try:
+                    await client.edit_permissions(rkG.chat_id, guser.id, view_messages=False)                              
+                    await rkG.reply(
+                     f"**Gbanned User Joined!!** \n"                      
+                     f"**Victim Id**: [{guser.id}](tg://user?id={guser.id})\n"                   
+                     f"**Action **  : `Banned`")                                                
+                 except:       
+                    rkG.reply("`No Permission To Ban`")                   
+                    return 
