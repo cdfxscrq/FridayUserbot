@@ -7,7 +7,7 @@ Available Commands:
 # file, You can obtain one at https://www.gnu.org/licenses/gpl-3.0.en.html
 import os
 import sys
-
+import asyncio
 from userbot.utils import admin_cmd
 
 
@@ -34,3 +34,4 @@ async def _(event):
         return
     await event.edit("Turning off ...Manually turn me on later")
     await borg.disconnect()
+
