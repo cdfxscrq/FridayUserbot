@@ -3,7 +3,7 @@ Syntax: .afk REASON"""
 import asyncio
 import datetime
 from datetime import datetime
-
+from userbot.utils import friday_on_cmd
 from telethon import events
 from telethon.tl import functions, types
 
@@ -19,8 +19,7 @@ afk_start = {}
 
 
 @friday.on(
-    events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True)
-)  # pylint:disable=E0602
+    events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
