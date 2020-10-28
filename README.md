@@ -38,13 +38,13 @@ Best User Bot To Manage Your Telegram Account
 
 Simply clone the repository and run the main file:
 ```sh
-git clone https://github.com/starkGang/Fridayuserbot
+git clone https://github.com/starkGang/Fridayfridaybot
 cd FridayUserbot
 virtualenv -p /usr/bin/python3 venv
 . ./venv/bin/activate
 pip install -r requirements.txt
 # <Create local_config.py with variables as given below>
-python3 -m userbot
+python3 -m fridaybot
 ```
 
 An example `local_config.py` file could be:
@@ -65,7 +65,7 @@ class Development(Var):
 ### UniBorg Configuration
 
 
-The UniBorg Config is situated in `userbot/Configs.py`.
+The UniBorg Config is situated in `fridaybot/Configs.py`.
 
 **Heroku Configuration**
 Simply just leave the Config as it is.
@@ -74,12 +74,15 @@ Simply just leave the Config as it is.
 Fortunately there are no Mandatory vars for the UniBorg Support Config.
 
 ## Mandatory Vars
-
+```
 [+] Only two of the environment variables are mandatory.
-[+] This is because of `telethon.errors.rpc_error_list.ApiIdPublishedFloodError`
-    [-] `APP_ID`:   You can get this value from https://my.telegram.org
-    [-] `API_HASH`:   You can get this value from https://my.telegram.org
-[+] The userbot will not work without setting the mandatory vars.
 
+[+] This is because of telethon.errors.rpc_error_list.ApiIdPublishedFloodError
+
+    [-] APP_ID:   You can get this value from https://my.telegram.org
+    [-] API_HASH :   You can get this value from https://my.telegram.org
+    
+[+] The fridaybot will not work without setting the mandatory vars.
+```
 ## Credits 
-[+] Check Contribution At https://github.com/StarkGang/FridayUserbot/graphs/contributors
+`[+] Check Contribution At https://github.com/StarkGang/FridayUserbot/graphs/contributors`
