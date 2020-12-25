@@ -4,13 +4,13 @@ Syntax: .eval PythonCode"""
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import inspect
-import asyncio
 import io
 import sys
 import traceback
-from telethon import events, errors, functions, types
-from uniborg.util import friday_on_cmd, edit_or_reply, sudo_cmd
+
+from uniborg.util import edit_or_reply, friday_on_cmd, sudo_cmd
+
+from fridaybot import CMD_HELP
 
 
 @friday.on(friday_on_cmd("eval"))
@@ -71,3 +71,12 @@ async def _(event):
 async def aexec(code, event):
     exec(f"async def __aexec(event): " + "".join(f"\n {l}" for l in code.split("\n")))
     return await locals()["__aexec"](event)
+
+
+CMD_HELP.update(
+    {
+        "eval": "**Eval**\
+\n\n**Syntax : **`.eval <python code>`\
+\n**Usage :** Run python code using this plugin."
+    }
+)

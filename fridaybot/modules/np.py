@@ -7,6 +7,7 @@ Credits to @mariodevs
 
 import asyncio
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -33,3 +34,12 @@ async def _(event):
 
         await asyncio.sleep(animation_interval)
         await event.edit(animation_chars[i % 18])
+
+
+CMD_HELP.update(
+    {
+        "np": "**Nope**\
+\n\n**Syntax : **`.nope`\
+\n**Usage :** Use this plugin the say nope in funny way."
+    }
+)

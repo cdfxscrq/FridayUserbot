@@ -3,7 +3,9 @@
 # Official Web : nekobot.xyz
 # "Copy It As You Want But Don't Edit Credits"
 import requests
-from uniborg.util import friday_on_cmd, edit_or_reply, sudo_cmd
+from uniborg.util import edit_or_reply, friday_on_cmd, sudo_cmd
+
+from fridaybot import CMD_HELP
 
 
 @friday.on(friday_on_cmd("ttt ?(.*)"))
@@ -63,3 +65,14 @@ async def noobishere(event):
     await event.client.send_file(
         event.chat_id, tweetimg, caption=starkxd, reply_to=reply_to_id
     )
+
+
+CMD_HELP.update(
+    {
+        "nekobot": "**NekoBot**\
+\n\n**Syntax : **`.ttt <text>`\
+\n**Usage :** creates Trump tweet with your text.\
+\n\n**Syntax : **`.tweet tweetusername:text`\
+\n**Usage :** Create  Tweets with given username and text ."
+    }
+)

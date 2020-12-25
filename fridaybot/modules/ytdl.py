@@ -12,7 +12,7 @@ import os
 import time
 
 from telethon.tl.types import DocumentAttributeAudio
-from uniborg.util import friday_on_cmd, edit_or_reply, sudo_cmd
+from uniborg.util import edit_or_reply, friday_on_cmd, sudo_cmd
 from youtube_dl import YoutubeDL
 from youtube_dl.utils import (
     ContentTooShortError,
@@ -24,6 +24,8 @@ from youtube_dl.utils import (
     UnavailableVideoError,
     XAttrMetadataError,
 )
+
+from fridaybot import CMD_HELP
 
 
 async def progress(current, total, event, start, type_of_ps, file_name=None):
@@ -213,3 +215,12 @@ async def download_video(v_url):
         )
         os.remove(f"{ytdl_data['id']}.mp4")
         await v_url.delete()
+
+
+CMD_HELP.update(
+    {
+        "ytdl": "**Ytdl**\
+\n\n**Syntax : **`.yta <song link> OR .ytv <video link>`\
+\n**Usage :** download songs or videos from YouTube just with a link"
+    }
+)

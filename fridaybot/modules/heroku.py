@@ -10,8 +10,13 @@ import os
 
 import heroku3
 import requests
+from telegraph import Telegraph
 
-from fridaybot.utils import friday_on_cmd, edit_or_reply, sudo_cmd
+from fridaybot import CMD_HELP
+from fridaybot.utils import edit_or_reply, friday_on_cmd, sudo_cmd
+
+telegraph = Telegraph()
+tgnoob = telegraph.create_account(short_name="Friday 🇮🇳")
 
 Heroku = heroku3.from_key(Var.HEROKU_API_KEY)
 heroku_api = "https://api.heroku.com"
@@ -210,13 +215,34 @@ async def _(givelogs):
     await edit_or_reply(givelogs, "`Trying To Fetch Logs...`")
     with open("logs.txt", "w") as log:
         log.write(app.get_log())
+    hmm = app.get_log()
+    starky = f"<code> {hmm} </code>"
+    title_of_page = "Friday UserBot Logs"
+    response = telegraph.create_page(title_of_page, html_content=starky)
+    km = response["path"]
+    suger = f"`Logs Can Be Found` [Here](https://telegra.ph/{km})"
     await givelogs.client.send_file(
         givelogs.chat_id,
         "logs.txt",
         reply_to=givelogs.id,
-        caption="Logs Collected Using Heroku \n For More Support Visit @FridayOT",
+        caption=suger,
     )
-    await edit_or_reply(givelogs, "`Logs Send Sucessfully ! `")
-    await asyncio.sleep(5)
-    await givelogs.delete()
-    return os.remove("logs.txt")
+
+
+CMD_HELP.update(
+    {
+        "heroku": "**Heroku**\
+\n\n**Syntax : **`.set var <var key> <var value>`\
+\n**Usage :** Add new variable or update existing value variable.\
+\n\n**Syntax : **`.get var <var>`\
+\n**Usage :** Get your existing variables, use it only on your private group!\
+\n\n**Syntax : **`.del var <var>`\
+\n**Usage :** Deletes existing variable.\
+\n\n**Syntax : **`.usage`\
+\n**Usage :** Gives you information about Dyno usage.\
+\n\n**Syntax : **`.info heroku`\
+\n**Usage :** Gives you information to use other commands of heroku.\
+\n\n**Syntax : **`.logs`\
+\n**Usage :** Gets logs from heroku."
+    }
+)

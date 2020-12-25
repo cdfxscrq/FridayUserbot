@@ -21,6 +21,7 @@ from datetime import datetime
 
 import requests
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -116,3 +117,12 @@ def ReTrieveURL(input_url):
         stream=True,
     )
     return r
+
+
+CMD_HELP.update(
+    {
+        "remove.bg": "**Remove background**\
+\n\n**Syntax : **`.rmbg <reply to image>`\
+\n**Usage :** Image of replyed image is removed."
+    }
+)

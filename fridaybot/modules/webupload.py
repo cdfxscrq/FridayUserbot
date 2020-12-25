@@ -2,6 +2,8 @@
 import asyncio
 import time
 
+from fridaybot import CMD_HELP
+
 
 @command(
     pattern="^.webupload ?(.+?|) (?:--)(anonfiles|transfer|filebin|anonymousfiles|megaupload|bayfiles)"
@@ -38,3 +40,12 @@ async def _(event):
     )
     stdout, stderr = await process.communicate()
     await event.edit(f"{stdout.decode()}")
+
+
+CMD_HELP.update(
+    {
+        "webupload": "**Webupload**\
+\n\n**Syntax : **`.webupload --<anonfiles/transfer/filebin/anonymousfiles/megaupload/bayfiles><reply to the file you want to upload>`\
+\n**Usage :** upload file in the website and provides Download link."
+    }
+)

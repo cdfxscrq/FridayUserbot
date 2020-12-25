@@ -22,8 +22,8 @@ from telethon.tl.types import (
     MessageMediaPhoto,
 )
 
-from fridaybot import ALIVE_NAME
-from fridaybot.utils import friday_on_cmd, edit_or_reply, sudo_cmd
+from fridaybot import ALIVE_NAME, CMD_HELP
+from fridaybot.utils import edit_or_reply, friday_on_cmd, sudo_cmd
 
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else "Who is this"
 FILLED_UP_DADDY = "Invalid pack selected."
@@ -34,6 +34,9 @@ FILLED_UP_DADDY = "Invalid pack selected."
 async def _(event):
     if event.fwd_from:
         return
+    if not event.reply_to_msg_id:
+        await event.edit("PLease, Reply To A Sticker / Image To Add It Your Pack")
+        return
     if not event.is_reply:
         await moods.edit("Reply to a photo to add to my personal sticker pack.")
         return
@@ -42,7 +45,9 @@ async def _(event):
     input_str = event.pattern_match.group(1)
     if input_str:
         sticker_emoji = input_str
-    moods = await edit_or_reply(event, "`Hello, This Sticker Looks Noice. Mind if I steal it`")
+    moods = await edit_or_reply(
+        event, "`Hello, This Sticker Looks Noice. Mind if I steal it`"
+    )
     user = await bot.get_me()
     if not user.username:
         user.username = user.id
@@ -449,3 +454,16 @@ def zipdir(path, ziph):
         for file in files:
             ziph.write(os.path.join(root, file))
             os.remove(os.path.join(root, file))
+
+
+CMD_HELP.update(
+    {
+        "stickers": "**Stickers**\
+\n\n**Syntax : **`.kang <reply to sticker/image>`\
+\n**Usage :** Kangs the image into your sticker pack.\
+\n\n**Syntax : **`.packinfo <reply to a sticker>`\
+\n**Usage :** Shows info about the pack.\
+\n\n**Syntax : **`.getsticker <reply to sticker>`\
+\n**Usage :** Downloada the sticker."
+    }
+)

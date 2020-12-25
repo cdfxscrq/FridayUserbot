@@ -7,7 +7,8 @@ Available Commands:
 # file, You can obtain one at https://www.gnu.org/licenses/gpl-3.0.en.html
 import os
 import sys
-import asyncio
+
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -20,7 +21,7 @@ async def _(event):
     # await asyncio.sleep(2)
     # await event.edit("Restarting [███]...\n`.ping` me or `.help` to check if I am online after a lil bit.")
     # await asyncio.sleep(2)
-    await event.edit("Restarted. `.ping` me or `.helpme` to check if I am online")
+    await event.edit("Restarted. `.ping` me or `.help` me to check if I am online")
     await borg.disconnect()
     # https://archive.is/im3rt
     os.execl(sys.executable, sys.executable, *sys.argv)
@@ -35,3 +36,13 @@ async def _(event):
     await event.edit("Turning off ...Manually turn me on later")
     await borg.disconnect()
 
+
+CMD_HELP.update(
+    {
+        "power_tools": "**Power Tools**\
+\n\n**Syntax : **`.restart`\
+\n**Usage :** restarts your Friday userbot.\
+\n\n**Syntax : **`.shutdown`\
+\n**Usage :** Shuts down your Friday userbot."
+    }
+)

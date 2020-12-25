@@ -9,6 +9,8 @@ import asyncio
 
 from telethon import events
 
+from fridaybot import CMD_HELP
+
 
 @friday.on(events.NewMessage(pattern=r"\.(.*)", outgoing=True))
 async def _(event):
@@ -169,3 +171,12 @@ async def _(event):
         for i in animation_ttl:
             await asyncio.sleep(animation_interval)
             await event.edit(animation_chars[i % 549755813888])
+
+
+CMD_HELP.update(
+    {
+        "solarsystem": "**Solar System**\
+\n\n**Syntax : **`.solarsystem`\
+\n**Usage :** creates solar system with text."
+    }
+)

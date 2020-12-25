@@ -6,6 +6,8 @@ import asyncio
 
 from telethon import events
 
+from fridaybot import CMD_HELP
+
 
 @friday.on(events.NewMessage(pattern=r"\.(.*)", outgoing=True))
 async def _(event):
@@ -42,3 +44,12 @@ async def _(event):
             await asyncio.sleep(animation_interval)
 
             await event.edit(animation_chars[i % 8])
+
+
+CMD_HELP.update(
+    {
+        "muth": "**Muth**\
+\n\n**Syntax : **`.muth`\
+\n**Usage :** funny prank plugin."
+    }
+)

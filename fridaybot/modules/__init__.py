@@ -1,8 +1,7 @@
 from fridaybot import topfunc
-from fridaybot.utils import friday_on_cmd
-from var import Var 
 from fridaybot.Configs import Config
-
+from fridaybot.utils import friday_on_cmd
+from var import Var
 
 idgen = topfunc.id_generator
 findnemo = topfunc.stark_finder
@@ -14,7 +13,7 @@ gdriveisshit = Config.AUTH_TOKEN_DATA
 wttrapi = Config.OPEN_WEATHER_MAP_APPID
 rmbg = Config.REM_BG_API_KEY
 hmmok = Config.LYDIA_API
-currentversion = "3.0"
+currentversion = "4.0"
 if issudousing:
     amiusingsudo = "Active ✅"
 else:
@@ -55,10 +54,12 @@ if isdbfine:
 else:
     dbstats = "Not Fine ❌"
 
-inlinestats = (f"✘ SHOWING FRIDAY STATS ✘\n"
-               f"VERSION = {currentversion} \n"
-               f"DATABASE = {dbstats} \n"
-               f"SUDO = {amiusingsudo} \n"
-               f"LOG-CHAT = {logchat} \n"
-               f"HEROKU = {riplife} \n"
-               f"G-DRIVE = {wearenoob}")
+inlinestats = (
+    f"✘ SHOWING FRIDAY STATS ✘\n"
+    f"VERSION = {currentversion} \n"
+    f"DATABASE = {dbstats} \n"
+    f"SUDO = {amiusingsudo} \n"
+    f"LOG-CHAT = {logchat} \n"
+    f"HEROKU = {riplife} \n"
+    f"G-DRIVE = {wearenoob}"
+)

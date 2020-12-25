@@ -2,7 +2,8 @@
 Syntax: .github USERNAME"""
 import requests
 
-from fridaybot.utils import friday_on_cmd, edit_or_reply, sudo_cmd
+from fridaybot import CMD_HELP
+from fridaybot.utils import edit_or_reply, friday_on_cmd, sudo_cmd
 
 
 @borg.on(friday_on_cmd("github (.*)"))
@@ -43,3 +44,12 @@ Profile Created: {}""".format(
         await event.delete()
     else:
         await edit_or_reply(event, "`{}`: {}".format(input_str, r.text))
+
+
+CMD_HELP.update(
+    {
+        "github": "**GitHub**\
+\n\n**Syntax : **`.github <username>`\
+\n**Usage :** Get information about an user on GitHub."
+    }
+)

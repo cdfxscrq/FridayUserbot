@@ -12,7 +12,8 @@ import requests
 from bs4 import BeautifulSoup
 from google_images_download import google_images_download
 
-from fridaybot.utils import friday_on_cmd, edit_or_reply, sudo_cmd
+from fridaybot import CMD_HELP
+from fridaybot.utils import edit_or_reply, friday_on_cmd, sudo_cmd
 
 
 def progress(current, total):
@@ -157,3 +158,16 @@ More Info: Open this <a href="{the_location}">Link</a> in {ms} seconds""".format
             **locals()
         )
     await event.edit(OUTPUT_STR, parse_mode="HTML", link_preview=False)
+
+
+CMD_HELP.update(
+    {
+        "ultragoogle": "**Ultra Google**\
+\n\n**Syntax : **`.search <query>`\
+\n**Usage :** Searches your query in Google and gets results.\
+\n\n**Syntax : **`.image <query>`\
+\n**Usage :** Searches your query in Google and gets image results.\
+\n\n**Syntax : **`.grs <reply to image>`\
+\n**Usage :** Reverse searches given image in Google."
+    }
+)

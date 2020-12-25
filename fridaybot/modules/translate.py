@@ -3,10 +3,12 @@ Available Commands:
 .tr LanguageCode as reply to a message
 .tr LangaugeCode | text to translate"""
 
-import emoji
-from googletrans import Translator
+from deep_translator import GoogleTranslator
+from googletrans import LANGUAGES
+from langdetect import detect
 
-from fridaybot.utils import friday_on_cmd, edit_or_reply, sudo_cmd
+from fridaybot import CMD_HELP
+from fridaybot.utils import edit_or_reply, friday_on_cmd, sudo_cmd
 
 
 @friday.on(friday_on_cmd("tr ?(.*)"))
@@ -15,32 +17,48 @@ async def _(event):
     if event.fwd_from:
         return
     if "trim" in event.raw_text:
-        # https://t.me/c/1220993104/192075
         return
     input_str = event.pattern_match.group(1)
     if event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         text = previous_message.message
-        lan = input_str or "gu"
+        lan = input_str or "en"
     elif "|" in input_str:
         lan, text = input_str.split("|")
     else:
         await edit_or_reply(event, "`.tr LanguageCode` as reply to a message")
         return
-    text = emoji.demojize(text.strip())
     lan = lan.strip()
-    translator = Translator()
     try:
-        translated = translator.translate(text, dest=lan)
-        after_tr_text = translated.text
-        # TODO: emojify the :
-        # either here, or before translation
-        output_str = """**Translated By FridayUserbot** 
-         Source **( {} )**
-         Translation **( {} )**
-         {}""".format(
-            translated.src, lan, after_tr_text
-        )
-        await edit_or_reply(event, output_str)
+        lmao_bruh = text
+        lmao = detect(text)
+        after_tr_text = lmao
+        translated = GoogleTranslator(source="auto", target=lan).translate(lmao_bruh)
+        source_lan = LANGUAGES[after_tr_text]
+        transl_lan = LANGUAGES[lan]
+        output_str = f"""**TRANSLATED SUCCESSFULLY**
+**Source ({source_lan})**:
+`{text}`
+
+**Translation ({transl_lan})**:
+`{translated}`"""
+        if len(output_str) >= 4096:
+            out_file = output_str
+            url = "https://del.dog/documents"
+            r = requests.post(url, data=out_file.encode("UTF-8")).json()
+            url2 = f"https://del.dog/{r['key']}"
+            starky = f"Translated Text Was Too Big, Never Mind I Have Pasted It [Here]({url2})"
+        else:
+            starky = output_str
+        await edit_or_reply(event, starky)
     except Exception as exc:
         await edit_or_reply(event, str(exc))
+
+
+CMD_HELP.update(
+    {
+        "translate": "**Translate**\
+\n\n**Syntax : **`.tr <language Code> <reply to text>`\
+\n**Usage :** Translates the given text into your language."
+    }
+)

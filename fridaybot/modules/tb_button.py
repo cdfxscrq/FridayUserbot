@@ -3,7 +3,8 @@
 import re
 
 from telethon import custom
-from uniborg.util import friday_on_cmd
+
+from fridaybot.utils import friday_on_cmd
 
 # regex obtained from: https://github.com/PaulSonOfLars/tgbot/blob/master/tg_bot/modules/helper_funcs/string_handling.py#L23
 BTN_URL_REGEX = re.compile(r"(\{([^\[]+?)\}\<buttonurl:(?:/{0,2})(.+?)(:same)?\>)")

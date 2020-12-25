@@ -7,6 +7,7 @@ Available Commands:
 
 import asyncio
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -44,3 +45,12 @@ async def _(event):
 
             await asyncio.sleep(animation_interval)
             await event.edit(animation_chars[i % 18])
+
+
+CMD_HELP.update(
+    {
+        "ok": "**OK**\
+\n\n**Syntax : **`.ok`\
+\n**Usage :** Funny plugin to say 'ok sar'."
+    }
+)

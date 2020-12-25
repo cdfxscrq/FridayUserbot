@@ -7,6 +7,7 @@ from telethon.errors.rpcerrorlist import (
 )
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -41,3 +42,12 @@ async def _(event):
             await event.delete()
         except YouBlockedUserError:
             await event.edit("**Error:** `unblock` @DeezLoadBot `and retry!`")
+
+
+CMD_HELP.update(
+    {
+        "musicdl": "**Music downloader**\
+\n\n**Syntax : **`.sdd <link>`\
+\n**Usage :** Downloads music from given link."
+    }
+)

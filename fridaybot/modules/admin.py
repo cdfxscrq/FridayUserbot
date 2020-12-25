@@ -32,7 +32,7 @@ from telethon.tl.types import (
 )
 
 from fridaybot import BOTLOG, BOTLOG_CHATID, CMD_HELP
-from fridaybot.utils import friday_on_cmd, errors_handler, register, sudo_cmd
+from fridaybot.utils import admin_cmd, errors_handler, sudo_cmd
 
 # =================== CONSTANT ===================
 PP_TOO_SMOL = "`The image is too small`"
@@ -80,8 +80,8 @@ UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 # ================================================
 
 
-@friday.on(friday_on_cmd(pattern=r"setgpic"))
-@friday.on(sudo_cmd(pattern=r"setgpic", allow_sudo=True))
+# @register(outgoing=True, pattern="^.setgpic$")
+@borg.on(admin_cmd(pattern=r"setgpic"))
 @errors_handler
 async def set_group_photo(gpic):
     """ For .setgpic command, changes the picture of a group """
@@ -119,8 +119,8 @@ async def set_group_photo(gpic):
             await gpic.edit(PP_ERROR)
 
 
-@friday.on(friday_on_cmd(pattern=r"promote(?: |$)(.*)"))
-@friday.on(sudo_cmd(pattern=r"promote(?: |$)(.*)", allow_sudo=True))
+# @register(outgoing=True, pattern="^.promote(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"promote(?: |$)(.*)"))
 @errors_handler
 async def promote(promt):
     """ For .promote command, promotes the replied/tagged person """
@@ -174,7 +174,8 @@ async def promote(promt):
         )
 
 
-@friday.on(friday_on_cmd(pattern=r"demote(?: |$)(.*)"))
+# @register(outgoing=True, pattern="^.demote(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"demote(?: |$)(.*)"))
 @errors_handler
 async def demote(dmod):
     """ For .demote command, demotes the replied/tagged person """
@@ -227,7 +228,8 @@ async def demote(dmod):
         )
 
 
-@friday.on(friday_on_cmd(pattern=r"ban(?: |$)(.*)"))
+# @register(outgoing=True, pattern="^.ban(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"ban(?: |$)(.*)"))
 @errors_handler
 async def ban(bon):
     """ For .ban command, bans the replied/tagged person """
@@ -281,7 +283,8 @@ async def ban(bon):
         )
 
 
-@friday.on(friday_on_cmd(pattern=r"unban(?: |$)(.*)"))
+# @register(outgoing=True, pattern="^.unban(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"unban(?: |$)(.*)"))
 @errors_handler
 async def nothanos(unbon):
     """ For .unban command, unbans the replied/tagged person """
@@ -320,7 +323,7 @@ async def nothanos(unbon):
         await unbon.edit("`Uh oh my unban logic broke!`")
 
 
-@friday.on(friday_on_cmd(pattern=r"mute(?: |$)(.*)"))
+@borg.on(admin_cmd(pattern=r"mute(?: |$)(.*)"))
 @errors_handler
 async def spider(spdr):
     """
@@ -328,7 +331,7 @@ async def spider(spdr):
     """
     # Check if the function running under SQL mode
     try:
-        from fridaybot.modules.sql_helper.spam_mute_sql import mute
+        from userbot.modules.sql_helper.spam_mute_sql import mute
     except AttributeError:
         await spdr.edit(NO_SQL)
         return
@@ -381,7 +384,8 @@ async def spider(spdr):
             return await spdr.edit("`Uh oh my mute logic broke!`")
 
 
-@friday.on(friday_on_cmd(pattern=r"unmute(?: |$)(.*)"))
+# @register(outgoing=True, pattern="^.unmute(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"unmute(?: |$)(.*)"))
 @errors_handler
 async def unmoot(unmot):
     """ For .unmute command, unmute the replied/tagged person """
@@ -397,7 +401,7 @@ async def unmoot(unmot):
 
     # Check if the function running under SQL mode
     try:
-        from fridaybot.modules.sql_helper.spam_mute_sql import unmute
+        from userbot.modules.sql_helper.spam_mute_sql import unmute
     except AttributeError:
         await unmot.edit(NO_SQL)
         return
@@ -431,206 +435,8 @@ async def unmoot(unmot):
             )
 
 
-@register(incoming=True)
-@errors_handler
-async def muter(moot):
-    """ Used for deleting the messages of muted people """
-    try:
-        from fridaybot.modules.sql_helper.gmute_sql import is_gmuted
-        from fridaybot.modules.sql_helper.spam_mute_sql import is_muted
-    except AttributeError:
-        return
-    muted = is_muted(moot.chat_id)
-    gmuted = is_gmuted(moot.sender_id)
-    rights = ChatBannedRights(
-        until_date=None,
-        send_messages=True,
-        send_media=True,
-        send_stickers=True,
-        send_gifs=True,
-        send_games=True,
-        send_inline=True,
-        embed_links=True,
-    )
-    if muted:
-        for i in muted:
-            if str(i.sender) == str(moot.sender_id):
-                await moot.delete()
-                await moot.client(
-                    EditBannedRequest(moot.chat_id, moot.sender_id, rights)
-                )
-    for i in gmuted:
-        if i.sender == str(moot.sender_id):
-            await moot.delete()
-
-
-# @register(outgoing=True, pattern="^.ungmute(?: |$)(.*)")
-@friday.on(friday_on_cmd(pattern=r"ungmute(?: |$)(.*)"))
-@errors_handler
-async def ungmoot(un_gmute):
-    """ For .ungmute command, ungmutes the target in the fridaybot """
-    # Admin or creator check
-    chat = await un_gmute.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
-
-    # If not admin and not creator, return
-    if not admin and not creator:
-        await un_gmute.edit(NO_ADMIN)
-        return
-
-    # Check if the function running under SQL mode
-    try:
-        from fridaybot.modules.sql_helper.gmute_sql import ungmute
-    except AttributeError:
-        await un_gmute.edit(NO_SQL)
-        return
-
-    user = await get_user_from_event(un_gmute)
-    user = user[0]
-    if user:
-        pass
-    else:
-        return
-
-    # If pass, inform and start ungmuting
-    await un_gmute.edit("```Ungmuting...```")
-
-    if ungmute(user.id) is False:
-        await un_gmute.edit("`Error! User probably not gmuted.`")
-    else:
-        # Inform about success
-        await un_gmute.edit("```Ungmuted Successfully```")
-
-        if BOTLOG:
-            await un_gmute.client.send_message(
-                BOTLOG_CHATID,
-                "#UNGMUTE\n"
-                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                f"CHAT: {un_gmute.chat.title}(`{un_gmute.chat_id}`)",
-            )
-
-
-@friday.on(friday_on_cmd(pattern=r"gmute(?: |$)(.*)"))
-@errors_handler
-async def gspider(gspdr):
-    """ For .gmute command, globally mutes the replied/tagged person """
-    # Admin or creator check
-    chat = await gspdr.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
-
-    # If not admin and not creator, return
-    if not admin and not creator:
-        await gspdr.edit(NO_ADMIN)
-        return
-
-    # Check if the function running under SQL mode
-    try:
-        from fridaybot.modules.sql_helper.gmute_sql import gmute
-    except AttributeError:
-        await gspdr.edit(NO_SQL)
-        return
-
-    user, reason = await get_user_from_event(gspdr)
-    if user:
-        pass
-    else:
-        return
-
-    # If pass, inform and start gmuting
-    await gspdr.edit("`Grabs a huge, sticky duct tape!`")
-    if gmute(user.id) is False:
-        await gspdr.edit("`Error! User probably already gmuted.\nRe-rolls the tape.`")
-    else:
-        if reason:
-            await gspdr.edit(f"`Globally taped!`Reason: {reason}")
-        else:
-            await gspdr.edit("`Globally taped!`")
-
-        if BOTLOG:
-            await gspdr.client.send_message(
-                BOTLOG_CHATID,
-                "#GMUTE\n"
-                f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                f"CHAT: {gspdr.chat.title}(`{gspdr.chat_id}`)",
-            )
-
-
-@friday.on(friday_on_cmd(pattern=r"delusers(?: |$)(.*)"))
-@errors_handler
-async def rm_deletedacc(show):
-    """ For .delusers command, list all the ghost/deleted accounts in a chat. """
-    if not show.is_group:
-        await show.edit("`I don't think this is a group.`")
-        return
-    con = show.pattern_match.group(1)
-    del_u = 0
-    del_status = "`No deleted accounts found, Group is cleaned as Hell`"
-
-    if con != "clean":
-        await show.edit("`Searching for zombie accounts...`")
-        async for user in show.client.iter_participants(show.chat_id, aggressive=True):
-            if user.deleted:
-                del_u += 1
-                await sleep(1)
-        if del_u > 0:
-            del_status = f"Found **{del_u}** deleted account(s) in this group,\
-            \nclean them by using .delusers clean"
-
-        await show.edit(del_status)
-        return
-
-    # Here laying the sanity check
-    chat = await show.get_chat()
-    admin = chat.admin_rights
-    creator = chat.creator
-
-    # Well
-    if not admin and not creator:
-        await show.edit("`I am not an admin here!`")
-        return
-
-    await show.edit("`Deleting deleted accounts...\nOh I can do that?!?!`")
-    del_u = 0
-    del_a = 0
-
-    async for user in show.client.iter_participants(show.chat_id):
-        if user.deleted:
-            try:
-                await show.client(
-                    EditBannedRequest(show.chat_id, user.id, BANNED_RIGHTS)
-                )
-            except ChatAdminRequiredError:
-                await show.edit("`I don't have ban rights in this group`")
-                return
-            except UserAdminInvalidError:
-                del_u -= 1
-                del_a += 1
-            await show.client(EditBannedRequest(show.chat_id, user.id, UNBAN_RIGHTS))
-            del_u += 1
-
-    if del_u > 0:
-        del_status = f"Cleaned **{del_u}** deleted account(s)"
-
-    if del_a > 0:
-        del_status = f"Cleaned **{del_u}** deleted account(s) \
-        \n**{del_a}** deleted admin accounts are not removed"
-
-    await show.edit(del_status)
-    await sleep(2)
-    await show.delete()
-
-    if BOTLOG:
-        await show.client.send_message(
-            BOTLOG_CHATID,
-            "#CLEANUP\n"
-            f"Cleaned **{del_u}** deleted account(s) !!\
-            \nCHAT: {show.chat.title}(`{show.chat_id}`)",
-        )
-
-
-@friday.on(friday_on_cmd(pattern=r"adminlist"))
+# @register(outgoing=True, pattern="^.adminlist$")
+@borg.on(admin_cmd(pattern=r"adminlist"))
 @errors_handler
 async def get_admin(show):
     """ For .admins command, list all of the admins of the chat. """
@@ -652,7 +458,8 @@ async def get_admin(show):
     await show.edit(mentions, parse_mode="html")
 
 
-@friday.on(friday_on_cmd(pattern=r"pin(?: |$)(.*)"))
+# @register(outgoing=True, pattern="^.pin(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"pin(?: |$)(.*)"))
 @errors_handler
 async def pin(msg):
     """ For .pin command, pins the replied/tagged message on the top the chat. """
@@ -699,7 +506,8 @@ async def pin(msg):
         )
 
 
-@friday.on(friday_on_cmd(pattern=r"kick(?: |$)(.*)"))
+# @register(outgoing=True, pattern="^.kick(?: |$)(.*)")
+@borg.on(admin_cmd(pattern=r"kick(?: |$)(.*)"))
 @errors_handler
 async def kick(usr):
     """ For .kick command, kicks the replied/tagged person from the group. """
@@ -743,7 +551,8 @@ async def kick(usr):
         )
 
 
-@friday.on(friday_on_cmd(pattern=r"users ?(.*)"))
+# @register(outgoing=True, pattern="^.users ?(.*)")
+@borg.on(admin_cmd(pattern=r"users ?(.*)"))
 @errors_handler
 async def get_users(show):
     """ For .users command, list all of the users in a chat. """
@@ -786,6 +595,59 @@ async def get_users(show):
             reply_to=show.id,
         )
         remove("userslist.txt")
+
+
+@borg.on(admin_cmd(pattern="zombies(?: |$)(.*)", allow_sudo=True))
+@borg.on(sudo_cmd(pattern="zombies(?: |$)(.*)", allow_sudo=True))
+async def rm_deletedacc(show):
+    con = show.pattern_match.group(1).lower()
+    del_u = 0
+    del_status = "`No deleted accounts found, Group is clean`"
+    if con != "clean":
+        await show.edit("`Searching for ghost/deleted/zombie accounts...`")
+        async for user in show.client.iter_participants(show.chat_id):
+
+            if user.deleted:
+                del_u += 1
+                await sleep(1)
+        if del_u > 0:
+            del_status = f"`Found` **{del_u}** `ghost/deleted/zombie account(s) in this group,\
+            \nclean them by using .zombies clean`"
+
+        await show.edit(del_status)
+        return
+    chat = await show.get_chat()
+    admin = chat.admin_rights
+    creator = chat.creator
+    if not admin and not creator:
+        await show.edit("`I am not an admin here!`")
+        return
+    await show.edit("`Deleting deleted accounts...\nOh I can do that?!?!`")
+    del_u = 0
+    del_a = 0
+    async for user in show.client.iter_participants(show.chat_id):
+        if user.deleted:
+            try:
+                await show.client(
+                    EditBannedRequest(show.chat_id, user.id, BANNED_RIGHTS)
+                )
+            except ChatAdminRequiredError:
+                await show.edit("`I don't have ban rights in this group`")
+                return
+            except UserAdminInvalidError:
+                del_u -= 1
+                del_a += 1
+            await show.client(EditBannedRequest(show.chat_id, user.id, UNBAN_RIGHTS))
+            del_u += 1
+    if del_u > 0:
+        del_status = f"Cleaned **{del_u}** deleted account(s)"
+    if del_a > 0:
+        del_status = f"Cleaned **{del_u}** deleted account(s) \
+        \n**{del_a}** deleted admin accounts are not removed"
+
+    await show.edit(del_status)
+    await sleep(2)
+    await show.delete()
 
 
 async def get_user_from_event(event):
@@ -840,28 +702,28 @@ async def get_user_from_id(user, event):
 CMD_HELP.update(
     {
         "admin": ".promote <username/reply> <custom rank (optional)>\
-\nUsage: Provides admin rights to the person in the chat.\
+\n**Usage:** Provides admin rights to the person in the chat.\
 \n\n.demote <username/reply>\
-\nUsage: Revokes the person's admin permissions in the chat.\
+\n**Usage:** Revokes the person's admin permissions in the chat.\
 \n\n.ban <username/reply> <reason (optional)>\
-\nUsage: Bans the person off your chat.\
+\n**Usage:** Bans the person off your chat.\
 \n\n.unban <username/reply>\
-\nUsage: Removes the ban from the person in the chat.\
+\n**Usage:** Removes the ban from the person in the chat.\
 \n\n.mute <username/reply> <reason (optional)>\
-\nUsage: Mutes the person in the chat, works on admins too.\
+\n**Usage:** Mutes the person in the chat, works on admins too.\
 \n\n.unmute <username/reply>\
-\nUsage: Removes the person from the muted list.\
+\n**Usage:** Removes the person from the muted list.\
 \n\n.gmute <username/reply> <reason (optional)>\
-\nUsage: Mutes the person in all groups you have in common with them.\
+\n**Usage:** Mutes the person in all groups you have in common with them.\
 \n\n.ungmute <username/reply>\
-\nUsage: Reply someone's message with .ungmute to remove them from the gmuted list.\
+\n**Usage:** Reply someone's message with .ungmute to remove them from the gmuted list.\
 \n\n.delusers\
-\nUsage: Searches for deleted accounts in a group. Use .delusers clean to remove deleted accounts from the group.\
-\n\n.admins\
-\nUsage: Retrieves a list of admins in the chat.\
+\n**Usage:** Searches for deleted accounts in a group. Use .delusers clean to remove deleted accounts from the group.\
+\n\n.adminlist\
+\n**Usage:** Retrieves a list of admins in the chat.\
 \n\n.users or .users <name of member>\
-\nUsage: Retrieves all (or queried) users in the chat.\
+\n**Usage:** Retrieves all (or queried) users in the chat.\
 \n\n.setgppic <reply to image>\
-\nUsage: Changes the group's display picture."
+\n**Usage:** Changes the group's display picture."
     }
 )

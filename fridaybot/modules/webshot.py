@@ -6,6 +6,7 @@ import io
 
 import requests
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -65,3 +66,12 @@ async def _(event):
     else:
 
         await event.edit(response_api.text)
+
+
+CMD_HELP.update(
+    {
+        "webshot": "**Webshot**\
+\n\n**Syntax : **`.screencapture <webpage link>`\
+\n**Usage :** takes screenshot of webpage."
+    }
+)

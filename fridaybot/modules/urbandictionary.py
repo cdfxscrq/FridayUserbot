@@ -5,6 +5,7 @@
 Syntax: .ud Query"""
 import urbandict
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
@@ -31,3 +32,12 @@ async def _(event):
             await event.edit("No result found for **" + str + "**")
     except:
         await event.edit("No result found for **" + str + "**")
+
+
+CMD_HELP.update(
+    {
+        "urbandictionary": "**Urban Dictionary**\
+\n\n**Syntax : **`.ud <word>`\
+\n**Usage :** Gives meaning of the word from urban dictionary."
+    }
+)

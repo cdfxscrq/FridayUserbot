@@ -7,10 +7,11 @@ Credits to noone
 
 import asyncio
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd
 
 
-@friday.on(friday_on_cmd("Friday"))
+@friday.on(friday_on_cmd("friday"))
 async def _(event):
     if event.fwd_from:
         return
@@ -28,3 +29,12 @@ async def _(event):
 
         await asyncio.sleep(animation_interval)
         await event.edit(animation_chars[i % 18])
+
+
+CMD_HELP.update(
+    {
+        "supportgroup": "**Support Group**\
+\n\n**Syntax : **`.friday`\
+\n**Usage :** Creates link for Friday support group."
+    }
+)

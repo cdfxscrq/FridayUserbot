@@ -2,6 +2,8 @@ from telethon import events
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from uniborg.util import friday_on_cmd
 
+from fridaybot import CMD_HELP
+
 
 @friday.on(friday_on_cmd("sg ?(.*)"))
 async def _(event):
@@ -25,11 +27,10 @@ async def _(event):
             response = conv.wait_event(
                 events.NewMessage(incoming=True, from_users=461843263)
             )
-            # await borg.forward_messages(chat, reply_message)
-            await silently_send_message(chat, "/generate")
+            await borg.forward_messages(chat, reply_message)
             response = await response
         except YouBlockedUserError:
-            await event.reply("```Please unblock @sangmatainfo_bot and try again```")
+            await event.reply("```Please unblock @SangMataInfo_bot and try again```")
             return
         if response.text.startswith("Forward"):
             await event.edit(
@@ -52,19 +53,17 @@ async def _(event):
         return
     chat = "@fakemailbot"
     reply_message.sender
-    if reply_message.sender.bot:
-        await event.edit("```Reply to actual users message.```")
-        return
     await event.edit("```Processing```")
+    link = f"/generate"
     async with borg.conversation(chat) as conv:
         try:
             response = conv.wait_event(
                 events.NewMessage(incoming=True, from_users=177914997)
             )
-            await borg.forward_messages(chat, reply_message)
+            await conv.send_message(link)
             response = await response
         except YouBlockedUserError:
-            await event.reply("```Please unblock @sangmatainfo_bot and try again```")
+            await event.reply("```Please unblock @fakemailbot and try again```")
             return
         if response.text.startswith("send"):
             await event.edit(
@@ -99,7 +98,7 @@ async def _(event):
             await borg.forward_messages(chat, reply_message)
             response = await response
         except YouBlockedUserError:
-            await event.reply("```Please unblock @sangmatainfo_bot and try again```")
+            await event.reply("```Please unblock @uploadbot and try again```")
             return
         if response.text.startswith("Hi!,"):
             await event.edit(
@@ -134,7 +133,7 @@ async def _(event):
             await borg.forward_messages(chat, reply_message)
             response = await response
         except YouBlockedUserError:
-            await event.reply("```nikal gendu```")
+            await event.reply("```Please unblock @getidsbot and try again```")
             return
         if response.text.startswith("Hello,"):
             await event.edit(
@@ -169,7 +168,7 @@ async def _(event):
             await borg.forward_messages(chat, reply_message)
             response = await response
         except YouBlockedUserError:
-            await event.reply("```nikal gendu```")
+            await event.reply("```Please unblock @UrbanDictionaryBot and try again```")
             return
         if response.text.startswith("Hello,"):
             await event.edit(
@@ -177,3 +176,20 @@ async def _(event):
             )
         else:
             await event.edit(f"{response.message.message}")
+
+
+CMD_HELP.update(
+    {
+        "sangmata": "**Sangmata**\
+\n\n**Syntax : **`.sg <reply to someone's message>`\
+\n**Usage :** gets name history of the person.\
+\n\n**Syntax : **`.fakemail <reply to someone's message>`\
+\n**Usage :** Gets you fake email to use.\
+\n\n**Syntax : **`.ub <reply to a link>`\
+\n**Usage :** Download from given link and uploades in telegram.\
+\n\n**Syntax : **`.gid <reply to someone's message>`\
+\n**Usage :** gets id and info of the person.\
+\n\n**Syntax : **`.urban <reply to text>`\
+\n**Usage :** Gets you meaning of replyed text."
+    }
+)

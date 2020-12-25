@@ -1,79 +1,78 @@
-# <u> FRIDAY-USERBOT 🇮🇳 </u>
-## A Bot With Assistant Support 🔥
-
-<p align="center">
-<img src="https://telegra.ph/file/22535f8051a58af113586.jpg" alt="FRIDAY USERBOT">
-
-
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+<p align="center"><a href="https://t.me/fridayot"><img src="https://telegra.ph/file/22535f8051a58af113586.jpg" width="5000"></a></p> 
+<h1 align="center"><b>FRIDAY-USERBOT 🇮🇳 </b></h1>
+<h4 align="center">A Powerful, Smart And Simple Userbot In Telethon.</h4>
 
 
 
-Best User Bot To Manage Your Telegram Account 
-## Most PowerFul And Better And Secure
 
-## (C) By Team #SᴛᴀʀᴋGᴀɴɢ™
 
-### For any query or want to know how it works join Group And Channel 
+
+
+# Support
 
 <a href="https://t.me/FridaySupportOfficial"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
 
 <a href="https://t.me/fridayOT"><img src="https://img.shields.io/badge/Join-Telegram%20Group-blue.svg?logo=telegram"></a>
 
-## HOW TO DEPLOY 
+
+
+
+
+
+# Method
 
 <a href="https://youtu.be/xfHcm_e92eQ"><img src="https://img.shields.io/badge/How%20To-Deploy-red.svg?logo=Youtube"></a>
 
+<a href="https://app.gitbook.com/@starkgangz/s/fridayuserbot/"><img src="https://img.shields.io/badge/Read%20More-GitBook-red.svg"></a>
 
-### Host Friday In Heroku
+
+
+
+
+# Deploying To Heroku
 
 [![Deploy To Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/StarkGang/FridayUserbot)
 
-## Telegram-String
 
+
+
+
+
+
+
+# String Session
+## Repl
 [![Run on Repl.it](https://repl.it/badge/github/STARKGANG/friday)](https://friday.midhunkm1294.repl.run)
 
 
-### The Normal Way
+
+
+# Hard Way (For Devs)
 
 Simply clone the repository and run the main file:
 ```sh
-git clone https://github.com/starkGang/Fridayfridaybot
+# Install Git First.
+git clone https://github.com/starkGang/FridayUserbot
+# Open Git Cloned File
 cd FridayUserbot
+# Config Virtual Env
 virtualenv -p /usr/bin/python3 venv
 . ./venv/bin/activate
+# Install All Requirements 
 pip install -r requirements.txt
-# <Create local_config.py with variables as given below>
+# Create local_config.py with variables as given below
+# Start Bot 
 python3 -m fridaybot
 ```
 
-An example `local_config.py` file could be:
-
-**Not All of the variables are mandatory**
-
-__The Userbot should work by setting only the first two variables__
-
-```python3
-from heroku_config import Var
-
-class Development(Var):
-  APP_ID = 6
-  API_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
-```
 
 
-### UniBorg Configuration
 
 
-The UniBorg Config is situated in `fridaybot/Configs.py`.
 
-**Heroku Configuration**
-Simply just leave the Config as it is.
 
-**Local Configuration**
-Fortunately there are no Mandatory vars for the UniBorg Support Config.
 
-## Mandatory Vars
+# Mandatory Vars
 ```
 [+] Only two of the environment variables are mandatory.
 
@@ -84,5 +83,17 @@ Fortunately there are no Mandatory vars for the UniBorg Support Config.
     
 [+] The fridaybot will not work without setting the mandatory vars.
 ```
-## Credits 
-`[+] Check Contribution At https://github.com/StarkGang/FridayUserbot/graphs/contributors`
+
+
+
+
+
+
+# Licence
+[![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](http://www.gnu.org/licenses/gpl-3.0.en.html)  
+
+FridayUserbot is Free Software: You can use, study share and improve it at your
+will. Specifically you can redistribute and/or modify it under the terms of the
+[GNU General Public License](https://www.gnu.org/licenses/gpl.html) as
+published by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version. 

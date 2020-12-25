@@ -8,6 +8,7 @@ import os
 
 from pySmartDL import SmartDL
 
+from fridaybot import CMD_HELP
 from fridaybot.utils import friday_on_cmd, sudo_cmd
 
 STARK_HTTP = "https://api.proxyscrape.com/?request=getproxies&proxytype=http&timeout=10000&country=all&ssl=all&anonymity=all"
@@ -72,3 +73,16 @@ async def friday(event):
         allow_cache=False,
         force_document=False,
     )
+
+
+CMD_HELP.update(
+    {
+        "proxyscrape": "**Proxy scrape**\
+\n\n**Syntax : **`.http`\
+\n**Usage :** scrapes http proxies automatically from many websites.\
+\n\n**Syntax : **`.socks4`\
+\n**Usage :** scrapes socks4 proxies automatically from many websites.\
+\n\n**Syntax : **`.socks5`\
+\n**Usage :** Scrapes socks5 proxies automatically from many websites."
+    }
+)

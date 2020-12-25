@@ -3,9 +3,11 @@ Syntax: .afk REASON"""
 import asyncio
 import datetime
 from datetime import datetime
-from fridaybot.utils import friday_on_cmd
+
 from telethon import events
 from telethon.tl import functions, types
+
+from fridaybot import CMD_HELP
 
 global USER_AFK  # pylint:disable=E0602
 global afk_time  # pylint:disable=E0602
@@ -19,7 +21,8 @@ afk_start = {}
 
 
 @friday.on(
-    events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))  # pylint:disable=E0602
+    events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True)
+)  # pylint:disable=E0602
 async def _(event):
     if event.fwd_from:
         return
@@ -45,7 +48,8 @@ async def _(event):
         USER_AFK = f"yes: {reason}"  # pylint:disable=E0602
         if reason:
             await borg.send_message(
-                event.chat_id, f"**My Master Seems To Be Too Busy 👀.** \n__He Going Afk Because Of__ `{reason}`"
+                event.chat_id,
+                f"**My Master Seems To Be Too Busy 👀.** \n__He Going Afk Because Of__ `{reason}`",
             )
         else:
             await borg.send_message(event.chat_id, f"**I Am Busy And I Am Going Afk**.")
@@ -163,3 +167,11 @@ async def on_afk(event):
         if event.chat_id in last_afk_message:  # pylint:disable=E0602
             await last_afk_message[event.chat_id].delete()  # pylint:disable=E0602
         last_afk_message[event.chat_id] = msg  # pylint:disable=E0602
+
+
+CMD_HELP.update(
+    {
+        "afk": ".afk <Reason> \
+\nUsage: Gets You Afk"
+    }
+)

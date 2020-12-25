@@ -1,6 +1,7 @@
 from telethon import events
 from telethon.utils import pack_bot_file_id
 
+from fridaybot import CMD_HELP
 from fridaybot.modules.sql_helper.welcome_sql import (
     add_welcome_setting,
     get_current_welcome_settings,
@@ -102,3 +103,16 @@ async def _(event):
         )
     else:
         await event.edit("No Welcome Message found")
+
+
+CMD_HELP.update(
+    {
+        "welcome": "**Welcome**\
+\n\n**Syntax : **`.savewelcome <welcome message to save>`\
+\n**Usage :** Saves welcome message.\
+\n\n**Syntax : **`.clearwelcome`\
+\n**Usage :** Clears welcome message.\
+\n\n**Syntax : **`.listwelcome`\
+\n**Usage :** Lists existing welcome message."
+    }
+)
