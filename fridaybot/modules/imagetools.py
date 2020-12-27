@@ -186,7 +186,7 @@ async def hmm(event):
     if not event.reply_to_msg_id:
         await event.reply("Reply to any Image.")
         return
-    hmmu = await event.edit("hmm... Sending him to jail...🚶")
+    hmmu = await event.reply("hmm... Sending him to jail...🚶")
     await event.get_reply_message()
     img = await convert_to_image(event, borg)
     sed = await event.get_reply_message()
@@ -388,12 +388,12 @@ async def spinshit(message):
 async def hmm(event):
     text = event.pattern_match.group(1)
     if not text:
-        await event.edit("No input found!  --__--")
+        await event.reply("No input found!  --__--")
         return
     if not event.reply_to_msg_id:
         await event.reply("Reply to any Image.")
         return
-    hmmu = await event.edit("hmm... Starting Live News Stream...🚶")
+    hmmu = await event.reply("hmm... Starting Live News Stream...🚶")
     await event.get_reply_message()
     img = await convert_to_image(event, borg)
     sed = await event.get_reply_message()
