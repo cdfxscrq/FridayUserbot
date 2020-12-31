@@ -16,7 +16,8 @@ import io
 import os
 import re
 
-from telethon import Button, custom, events
+from telethon import Button, custom, events, functions
+import telethon
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.utils import pack_bot_file_id
 
@@ -33,7 +34,6 @@ from fridaybot.modules.sql_helper.idadder_sql import (
     already_added,
     get_all_users,
 )
-from fridaybot.function import check_if_subbed
 
 @assistant_cmd("start", is_args=False)
 async def start(event):
@@ -129,11 +129,16 @@ async def users(event):
 @tgbot.on(events.NewMessage(func=lambda e: e.is_private))
 async def all_messages_catcher(event):
     if Config.SUB_TO_MSG_ASSISTANT:
-        lolbro = await check_if_subbed(Config.JTM_CHANNEL_ID, event, bot, event.sender_id)
-        if lolbro is False:
-            await event.reply(f"**Opps, I Couldn't Forward That Message To Owner. Please Join My Channel {Config.JTM_CHANNEL_USERNAME} First And Then Try Again!**")
-        else:
-            pass
+        try:
+            result = await tgbot(
+                functions.channels.GetParticipantRequest(
+                    channel=Config.JTM_CHANNEL_ID, user_id=event.sender_id
+                )
+            )
+        except telethon.errors.rpcerrorlist.UserNotParticipantError:
+            await event.reply(f"**Opps, I Couldn't Forward That Message To Owner. Please Join My Channel First And Then Try Again!**",
+                             buttons = [Button.url("Join Channel 🇮🇳", Config.JTM_CHANNEL_USERNAME)])
+            return
     if is_he_added(event.sender_id):
         return
     if event.raw_text.startswith("/"):
