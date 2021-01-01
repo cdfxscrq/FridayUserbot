@@ -9,18 +9,22 @@ from fridaybot import CMD_HELP
 @friday.on(friday_on_cmd("meaning (.*)"))
 @friday.on(sudo_cmd("meaning (.*)", allow_sudo=True))
 async def _(event):
-    stark = await edit_or_reply(event, "Finding Meaning.....")
+    omg = await edit_or_reply(event, "Finding Meaning.....")
     if event.fwd_from:
         return
     input_str = event.pattern_match.group(1)
     dictionary = PyDictionary()
     a = dictionary.meaning(input_str)
-    b = a.get("Noun")
-    chsaiujwal = ""
+    try:
+
+        b = a.get("Noun")
+    except:
+        await omg.edit("Couldn't Find Meaning Of Given Word")
+    messi = ""
     for x in b:
-        chsaiujwal += x + "\n"
-    await stark.edit(
-        f"<b> meaning of {input_str} is:-</b>\n {chsaiujwal}",
+        messi += x + "\n"
+    await omg.edit(
+        f"<b> meaning of {input_str} is:-</b>\n{messi}",
         parse_mode="HTML",
     )
 
