@@ -128,6 +128,12 @@ async def users(event):
 # Bot Permit.
 @tgbot.on(events.NewMessage(func=lambda e: e.is_private))
 async def all_messages_catcher(event):
+    if is_he_added(event.sender_id):
+        return
+    if event.sender_id == bot.uid:
+        return
+    if event.raw_text.startswith("/"):
+        return
     if Config.SUB_TO_MSG_ASSISTANT:
         try:
             result = await tgbot(
@@ -139,18 +145,9 @@ async def all_messages_catcher(event):
             await event.reply(f"**Opps, I Couldn't Forward That Message To Owner. Please Join My Channel First And Then Try Again!**",
                              buttons = [Button.url("Join Channel 🇮🇳", Config.JTM_CHANNEL_USERNAME)])
             return
-    if is_he_added(event.sender_id):
-        return
-    if event.raw_text.startswith("/"):
-        pass
-    elif event.sender_id == bot.uid:
-        return
-    else:
-        await event.get_sender()
-        sed = await event.forward_to(bot.uid)
-        # Add User To Database ,Later For Broadcast Purpose
-        # (C) @SpecHide
-        add_me_in_db(sed.id, event.sender_id, event.id)
+    await event.get_sender()
+    sed = await event.forward_to(bot.uid)
+    add_me_in_db(sed.id, event.sender_id, event.id)
 
 
 @tgbot.on(events.NewMessage(func=lambda e: e.is_private))
