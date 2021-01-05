@@ -312,13 +312,13 @@ async def voot(event):
             if c == 1906:
               await event.edit("voot server is blocking the requests. please try after few minutes...")
               if len(good_dict) == 0:
-                sys.exit()
+                return
               with open("hits.txt", "w") as hitfile:
                 for s in good_dict:
                   hitfile.write(s + ' | @FridayOT')
                 await borg.send_file(event.chat_id, "hits.txt", caption=f"**!VOOT HITS!** \n**HITS :** `{hits}` \n**BAD :** `{bady}`")
                 os.remove("hits.txt")
-                sys.exit()
+                return
 
     if len(good_dict) == 0:
         await event.edit("**0 Hits. Probably, You Should Find Better Combos. LoL**")
@@ -339,9 +339,9 @@ CMD_HELP.update(
 \n\n**Syntax : **`.cz5 <reply to combo>`\
 \n**Usage :** Checks for Zee5 accounts from combo.\
 \n\n**Syntax : **`.cnd <reply to combo>`\
-\n**Usage :** Checks for Voot accounts from combo.\
-\n\n**Syntax : **`.cvt <reply to combo>`\
 \n**Usage :** Checks for VYPR accounts from combo.\
+\n\n**Syntax : **`.cvt <reply to combo>`\
+\n**Usage :** Checks for Voot accounts from combo.\
 \n\n**Syntax : **`.cvx <reply to combo>`\
 \n**Usage :** Checks for Vortex accounts from combo.\
 \n\n**Syntax : **`.cz5 <reply to combo>`\
