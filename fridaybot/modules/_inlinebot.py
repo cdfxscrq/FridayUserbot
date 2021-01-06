@@ -2,13 +2,15 @@ import os
 import re
 import urllib
 from math import ceil
-
+from re import findall
+from search_engine_parser import GoogleSearch
+from urllib.parse import quote
 import requests
 from telethon import Button, custom, events, functions
 from youtubesearchpython import VideosSearch
 from fridaybot import ALIVE_NAME, CMD_HELP, CMD_LIST
 from fridaybot.modules import inlinestats
-
+from pornhub_api import PornhubApi
 PMPERMIT_PIC = os.environ.get("PMPERMIT_PIC", None)
 if PMPERMIT_PIC is None:
     WARN_PIC = "https://telegra.ph/file/53aed76a90e38779161b1.jpg"
@@ -451,3 +453,145 @@ async def inline_handler(event):
             ],
         )
         await event.answer([resulte])
+        
+@tgbot.on(events.InlineQuery(pattern=r"google (.*)"))
+async def inline_id_handler(event: events.InlineQuery.Event):
+    builder = event.builder
+    if event.query.user_id != bot.uid:
+        resultm = builder.article(
+            title="- Not Allowded -",
+            text=f"You Can't Use This Bot. \nDeploy Friday To Get Your Own Assistant, Repo Link [Here](https://github.com/StarkGang/FridayUserbot)",
+        )
+        await event.answer([resultm])
+        return
+    results = []
+    match = event.pattern_match.group(1)
+    page = findall(r"page=\d+", match)
+    try:
+        page = page[0]
+        page = page.replace("page=", "")
+        match = match.replace("page=" + page[0], "")
+    except IndexError:
+        page = 1
+    
+    search_args = (str(match), int(page))
+    gsearch = GoogleSearch()
+    gresults = await gsearch.async_search(*search_args)
+    msg = ""
+    for i in range(len(gresults["links"])):
+        try:
+            title = gresults["titles"][i]
+            link = gresults["links"][i]
+            desc = gresults["descriptions"][i]
+            okiknow = f"**GOOGLE - SEARCH** \n[{title}]({link})\n\n`{desc}`"
+            results.append(
+                await event.builder.article(
+                    title=title,
+                    description=desc,
+                    text=okiknow,
+                    buttons=[
+                        Button.switch_inline(
+                            "Search Again", query="google ", same_peer=True
+                        )
+                    ],
+                )
+            )
+        except IndexError:
+            break
+    await event.answer(results)
+    
+@tgbot.on(events.InlineQuery(pattern=r"ph (.*)"))
+async def inline_id_handler(event: events.InlineQuery.Event):
+    builder = event.builder
+    if event.query.user_id != bot.uid:
+        resultm = builder.article(
+            title="- Not Allowded -",
+            text=f"You Can't Use This Bot. \nDeploy Friday To Get Your Own Assistant, Repo Link [Here](https://github.com/StarkGang/FridayUserbot)",
+        )
+        await event.answer([resultm])
+        return
+    results = []
+    input_str = event.pattern_match.group(1)
+    api = PornhubApi()
+    data = api.search.search(
+    input_str,
+    ordering="mostviewed"
+    )
+    ok = 1
+    oik = ""
+    for vid in data.videos:
+      if ok <= 5:
+        lul_m = (f"**PORN-HUB SEARCH** \n**Video title :** `{vid.title}` \n**Video link :** `https://www.pornhub.com/view_video.php?viewkey={vid.video_id}`")
+        results.append(
+                await event.builder.article(
+                    title=vid.title,
+                    text=lul_m,
+                    buttons=[
+                        Button.switch_inline(
+                            "Search Again", query="ph ", same_peer=True
+                        )
+                    ],
+                )
+            )
+      else:
+        pass
+    await event.answer(results)
+    
+@tgbot.on(events.InlineQuery(pattern=r"xkcd (.*)"))
+async def inline_id_handler(event: events.InlineQuery.Event):
+    builder = event.builder
+    if event.query.user_id != bot.uid:
+        resultm = builder.article(
+            title="- Not Allowded -",
+            text=f"You Can't Use This Bot. \nDeploy Friday To Get Your Own Assistant, Repo Link [Here](https://github.com/StarkGang/FridayUserbot)",
+        )
+        await event.answer([resultm])
+        return
+    results = []
+    input_str = event.pattern_match.group(1)
+    xkcd_id = None
+    if input_str:
+        if input_str.isdigit():
+            xkcd_id = input_str
+        else:
+            xkcd_search_url = "https://relevantxkcd.appspot.com/process?"
+            queryresult = requests.get(
+                xkcd_search_url, params={"action": "xkcd", "query": quote(input_str)}
+            ).text
+            xkcd_id = queryresult.split(" ")[2].lstrip("\n")
+    if xkcd_id is None:
+        xkcd_url = "https://xkcd.com/info.0.json"
+    else:
+        xkcd_url = "https://xkcd.com/{}/info.0.json".format(xkcd_id)
+    r = requests.get(xkcd_url)
+    if r.ok:
+        data = r.json()
+        year = data.get("year")
+        month = data["month"].zfill(2)
+        day = data["day"].zfill(2)
+        xkcd_link = "https://xkcd.com/{}".format(data.get("num"))
+        safe_title = data.get("safe_title")
+        data.get("transcript")
+        alt = data.get("alt")
+        img = data.get("img")
+        data.get("title")
+        output_str = """
+[XKCD]({})
+Title: {}
+Alt: {}
+Day: {}
+Month: {}
+Year: {}""".format(
+            xkcd_link, safe_title, alt, day, month, year
+        )
+        lul_k = builder.photo(
+            file=img,
+            text=output_str
+        )
+        await event.answer([lul_k])
+    else:
+        resultm = builder.article(
+            title="- No Results :/ -",
+            text=f"No Results Found !"
+        )
+        await event.answer([resultm])
