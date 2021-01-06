@@ -4,6 +4,7 @@ import urllib
 from math import ceil
 from re import findall
 from search_engine_parser import GoogleSearch
+from fridaybot.function import _ytdl
 from urllib.parse import quote
 import requests
 from telethon import Button, custom, events, functions
@@ -140,8 +141,31 @@ async def rip(event):
     else:
         txt = "You Can't View My Masters Stats"
         await event.answer(txt, alert=True)
-
-
+        
+@tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"yt_dl_(.*)")))
+async def rip(event):
+    yt_dl_data = event.data_match.group(1).split("|", 1)
+    link_s = yt_dl_data[0]
+    is_video = yt_dl_data[1]
+    if event.query.user_id != bot.uid:
+        text = f"Please Get Your Own Friday And Don't Waste My Resources"
+        await event.answer(text, alert=True)
+        return
+    if is_video == 'friday':
+        is_it = True
+    else:
+        is_it = False
+    ok = await _ytdl(link_s, is_it, event, tgbot)
+    
+@tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"ph_dl_(.*)")))
+async def rip(event):
+    link_s = event.pattern_match.group(1)
+    if event.query.user_id != bot.uid:
+        text = f"Please Get Your Own Friday And Don't Waste My Resources."
+        await event.answer(text, alert=True)
+        return
+    ok = await _phdl(link_s, event, tgbot)
+    
 @tgbot.on(events.callbackquery.CallbackQuery(data=re.compile(b"dontspamnigga")))
 async def rip(event):
     if event.query.user_id == bot.uid:
@@ -367,14 +391,16 @@ async def inline_id_handler(event: events.InlineQuery.Event):
         okayz = f"**Title :** `{thum}` \n**Link :** `{mo}` \n**Channel :** `{thums}` \n**Views :** `{tw}` \n**Duration :** `{td}`"
         hmmkek = f"Channel : {thums} \nDuration : {td} \nViews : {tw}"
         results.append(
-            await event.builder.article(
+            await event.builder.photo(
+                file=kekme,
                 title=thum,
                 description=hmmkek,
                 text=okayz,
-                buttons=Button.switch_inline(
-                    "Search Again", query="yt ", same_peer=True
-                ),
-            )
+                buttons=[
+                [custom.Button.inline("Download Test", data=f"yt_dl_{mo}|{friday}")],
+                [Button.switch_inline("Search Again", query="yt ", same_peer=True)],
+                ]
+              )
         )
     await event.answer(results)
 
