@@ -25,6 +25,10 @@ from telethon.tl.types import (
 from fridaybot import ALIVE_NAME, CMD_HELP
 from fridaybot.utils import edit_or_reply, friday_on_cmd, sudo_cmd
 
+sedpath = Config.TMP_DOWNLOAD_DIRECTORY
+if not os.path.isdir(sedpath):
+    os.makedirs(sedpath)
+
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else "Who is this"
 FILLED_UP_DADDY = "Invalid pack selected."
 
@@ -76,12 +80,13 @@ async def _(event):
             packshortname = f"FRIDAY_{userid}"  # format: Uni_Borg_userid
     else:
         sticker = await convert_to_image(event, borg)
+        resize_image(sticker)
+        ok = sedpath + "/" + "@FridayOT.png"
         uploaded_sticker = await borg.upload_file(
-            sticker, file_name=file_ext_ns_ion
+            ok, file_name=file_ext_ns_ion
         )
-
+        os.remove(sticker)
     await moods.edit("`Inviting This Sticker To Your Pack 🚶`")
-
     async with borg.conversation("@Stickers") as bot_conv:
         now = datetime.datetime.now()
         dt = now + datetime.timedelta(minutes=1)
@@ -213,6 +218,7 @@ async def _(event):
     await moods.edit(
         f"`This Sticker Has Came To Your Pack.` \n**Check It Out** [Here](t.me/addstickers/{packshortname})"
     )
+    os.remove(sedpath + "/" + "@FridayOT.png")
 
 
 @friday.on(friday_on_cmd(pattern="packinfo"))
@@ -400,7 +406,7 @@ async def stickerset_exists(conv, setname):
         return False
 
 
-def resize_image(image, save_locaton):
+def resize_image(image):
     """Copyright Rhyse Simpson:
     https://github.com/skittles9823/SkittBot/blob/master/tg_bot/modules/stickers.py
     """
@@ -423,7 +429,9 @@ def resize_image(image, save_locaton):
         im = im.resize(sizenew)
     else:
         im.thumbnail(maxsize)
-    im.save(save_locaton, "PNG")
+    file_name = "@FridayOT.png"
+    ok = sedpath + "/" + file_name
+    im.save(ok, "PNG")
 
 
 def progress(current, total):
