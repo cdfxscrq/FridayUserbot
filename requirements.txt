@@ -37,7 +37,6 @@ telethon
 iplookup
 wget
 numpy
-googletrans
 pyshorteners
 aiohttp
 bs4
@@ -83,3 +82,5 @@ youtube-search
 password_strength
 pyjokes
 cryptocompare
+cryptg
+googletrans
