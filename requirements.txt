@@ -9,6 +9,7 @@ faker
 deep_translator
 pornhub-api
 countryinfo
+youtube-search-python
 emoji-country-flag
 langdetect
 PyProxyToolkit
@@ -21,7 +22,6 @@ flask
 yahoo_fin
 anime_downloader
 pandas
-PyDictionary
 fontTools
 pydub
 quote
