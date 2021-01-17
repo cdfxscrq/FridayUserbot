@@ -52,7 +52,6 @@ gitpython
 google-api-python-client==1.8.0
 google-auth-oauthlib
 google_images_download>=2.7.1
-google_trans_new
 gsearch
 hachoir
 heroku3
@@ -82,8 +81,6 @@ tswift
 urbandict>=0.5
 wikipedia>=1.4.0
 youtube-search
-youtube-search-python
 password_strength
 pyjokes
 cryptocompare
-faker
