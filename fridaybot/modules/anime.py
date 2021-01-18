@@ -91,7 +91,7 @@ CMD_HELP.update(
     {
         "anime": "**Anime**\
 \n\n**Syntax : **`.ainfo <Amime Name>`\
-\n**Usage :** Gives anime information.\
+\n**Usage :** Gives anime information with streaming link.\
 \n\n**Syntax : **`.anime <Amime Name:site Name>`\
 \n**Usage :** Automatically Gets Streaming Link Of The Anime.\
 \n**Example :** `.anime one piece:twist.moe`\
