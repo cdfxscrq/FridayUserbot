@@ -40,13 +40,38 @@ USER_BOT_NO_WARN = (
     f"**{CUSTOM_MIDDLE_PMP}**"
 )
 if Var.PRIVATE_GROUP_ID is not None:
+    
+    @borg.on(events.NewMessage(outgoing=True))
+    async def auto_approve_for_out_going(event):
+        if event.fwd_from:
+            return
+        if not event.is_private:
+            return
+        chat_ids = event.chat_id
+        sender = await event.client(GetFullUserRequest(await event.get_input_chat()))
+        first_name = sender.user.first_name
+        if chat_ids == bot.uid:
+            return
+        if sender.user.bot:
+            return
+        if sender.user.verified:
+            return
+        if PM_ON_OFF == "DISABLE":
+            return
+        if not pmpermit_sql.is_approved(event.chat_id):
+            if not event.chat_id in PM_WARNS:
+                pmpermit_sql.approve(event.chat_id, "outgoing")
+                bruh = "AutoApproved [{}](tg://user?id={}) Due To Out Going Message !".format(first_name, event.chat_id)
+                rko = await borg.send_message(event.chat_id, bruh)
+                await asyncio.sleep(3)
+                await rko.delete()           
 
     @borg.on(friday_on_cmd(pattern="(a|approve)$"))
     async def approve(event):
         if event.fwd_from:
             return
         if event.is_private:
-            replied_user = await borg(GetFullUserRequest(event.chat_id))
+            replied_user = await event.client(GetFullUserRequest(await event.get_input_chat()))
             firstname = replied_user.user.first_name
             if not pmpermit_sql.is_approved(event.chat_id):
                 if event.chat_id in PM_WARNS:
@@ -70,7 +95,7 @@ if Var.PRIVATE_GROUP_ID is not None:
                 await event.edit('`Reply To User To Approve Him !`')
                 return
             if not pmpermit_sql.is_approved(reply_s.sender_id):
-                replied_user = await borg(GetFullUserRequest(reply_s.sender_id))
+                replied_user = await event.client(GetFullUserRequest(reply_s.sender_id))
                 firstname = replied_user.user.first_name
                 pmpermit_sql.approve(reply_s.sender_id, "Approved Another Nibba")
                 await event.edit(
@@ -86,7 +111,7 @@ if Var.PRIVATE_GROUP_ID is not None:
     async def approve_p_m(event):
         if event.fwd_from:
             return
-        replied_user = await borg(GetFullUserRequest(event.chat_id))
+        replied_user = await event.client(GetFullUserRequest(await event.get_input_chat()))
         firstname = replied_user.user.first_name
         if event.is_private:
             if pmpermit_sql.is_approved(event.chat_id):
@@ -99,7 +124,7 @@ if Var.PRIVATE_GROUP_ID is not None:
         if event.fwd_from:
             return
         if event.is_private:
-            replied_user = await borg(GetFullUserRequest(event.chat_id))
+            replied_user = await event.client(GetFullUserRequest(await event.get_input_chat()))
             firstname = replied_user.user.first_name
             if pmpermit_sql.is_approved(event.chat_id):
                 pmpermit_sql.disapprove(event.chat_id)
@@ -118,7 +143,7 @@ if Var.PRIVATE_GROUP_ID is not None:
                 await event.edit('`Reply To User To DisApprove Him !`')
                 return
             if pmpermit_sql.is_approved(reply_s.sender_id):
-                replied_user = await borg(GetFullUserRequest(reply_s.sender_id))
+                replied_user = await event.client(GetFullUserRequest(reply_s.sender_id))
                 firstname = replied_user.user.first_name
                 pmpermit_sql.disapprove(reply_s.sender_id)
                 await event.edit(
@@ -162,7 +187,7 @@ if Var.PRIVATE_GROUP_ID is not None:
         else:
             await event.edit(APPROVED_PMs)
 
-    @bot.on(events.NewMessage(incoming=True))
+    @borg.on(events.NewMessage(incoming=True))
     async def on_new_private_message(event):
         if event.sender_id == bot.uid:
             return
@@ -175,7 +200,7 @@ if Var.PRIVATE_GROUP_ID is not None:
         chat_ids = event.sender_id
         if USER_BOT_NO_WARN == message_text:
             return
-        sender = await borg(GetFullUserRequest(event.sender_id))
+        sender = await event.client(GetFullUserRequest(chat_ids))
         if chat_ids == bot.uid:
             return
         if sender.user.bot:
