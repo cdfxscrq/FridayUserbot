@@ -1,4 +1,4 @@
-#    Copyright (C) Midhun KM 2020
+#    Copyright (C) Midhun KM 2020-2021
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -13,6 +13,7 @@
 
 
 import os
+import wget
 from shutil import rmtree
 import cv2
 import numpy as np
@@ -137,7 +138,38 @@ async def iamthug(event):
         if files and os.path.exists(files):
             os.remove(files)
 
-
+@friday.on(friday_on_cmd(pattern=r"msk ?(.*)"))
+async def iamnone(event):
+    if not event.reply_to_msg_id:
+        await event.reply("Reply to any Image.")
+        return
+    hmm = await event.edit("`Converting To Masked Image..`")
+    await event.get_reply_message()
+    img = await convert_to_image(event, borg)
+    imagePath = img
+    wget_s = wget.download(event.pattern_match.group(1), out=Config.TMP_DOWNLOAD_DIRECTORY)
+    maskPath = wget_s
+    cascPath = "./resources/thuglife/face_regex.xml"
+    faceCascade = cv2.CascadeClassifier(cascPath)
+    image = cv2.imread(imagePath)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = faceCascade.detectMultiScale(gray, 1.15)
+    background = Image.open(imagePath)
+    for (x, y, w, h) in faces:
+        mask = Image.open(maskPath)
+        mask = mask.resize((w, h), Image.ANTIALIAS)
+        offset = (x, y)
+        background.paste(mask, offset, mask=mask)
+    file_name = "masked_img.png"
+    ok = sedpath + "/" + file_name
+    background.save(ok, "PNG")
+    await borg.send_file(event.chat_id, ok)
+    await hmm.delete()
+    for files in (ok, img, maskPath):
+        if files and os.path.exists(files):
+            os.remove(files)
+            
+            
 @friday.on(friday_on_cmd(pattern=r"tni"))
 @friday.on(sudo_cmd(pattern=r"tni", allow_sudo=True))
 async def toony(event):
