@@ -11,45 +11,40 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from sqlalchemy import Column, UnicodeText
 
+from sqlalchemy import Column, String, UnicodeText
 from fridaybot.modules.sql_helper import BASE, SESSION
 
 
-class Fed(BASE):
-    __tablename__ = "fed"
-    feds = Column(UnicodeText, primary_key=True)
+class Gban(BASE):
+    __tablename__ = "gban"
+    user_id = Column(String(14), primary_key=True)
+    reason = Column(UnicodeText)
 
-    def __init__(self, feds):
-        self.feds = feds
+    def __init__(self, user_id, reason):
+        self.user_id = user_id
+        self.reason = reason
 
 
-Fed.__table__.create(checkfirst=True)
+Gban.__table__.create(checkfirst=True)
 
 
-def add_fed(feds):
-    feddy = Fed(feds)
-    SESSION.add(feddy)
+def gban_user(user_id: int, reason):
+    gbanner = Gban(str(user_id), reason)
+    SESSION.add(gbanner)
     SESSION.commit()
 
 
-def rmfed(feds):
-    rmfeddy = SESSION.query(Fed).get(feds)
-    if rmfeddy:
-        SESSION.delete(rmfeddy)
-        SESSION.commit()
-
-
-def get_all_feds():
-    stark = SESSION.query(Fed).all()
-    SESSION.close()
-    return stark
-
-
-def is_fed_indb(feds):
+def gban_data(user_id: int):
     try:
-        return SESSION.query(Fed).filter(Fed.feds == feds).one()
-    except:
-        return None
+        s__ = SESSION.query(Gban).get(str(user_id))
+        return int(s__.user_id), s__.reason
     finally:
         SESSION.close()
+
+def ungban_user(user_id):
+    ungbanner = SESSION.query(Gban).get(str(user_id))
+    if sed:
+        SESSION.delete(ungbanner)
+        SESSION.commit()
+        
