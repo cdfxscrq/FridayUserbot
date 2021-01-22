@@ -527,18 +527,18 @@ async def _ytdl(url, is_it, event, tgbot):
         os.remove(f"{ytdl_data['id']}.mp4")
                   
 async def get_all_admin_chats(event):
-    lul_stark = 
+    lul_stark = []
     all_chats = [
         d.entity.id
             for d in await event.client.get_dialogs()
             if (d.is_group or d.is_channel)
         ]
-        for i in all_chats:
-            try:
-                if i.creator or i.admin_rights:
-                    lul_stark.append(i.id)
-            except:
-                pass
+    for i in all_chats:
+        try:
+            if i.creator or i.admin_rights:
+                lul_stark.append(i.id)
+        except:
+            pass
     return lul_stark
                   
 async def is_admin(event):
