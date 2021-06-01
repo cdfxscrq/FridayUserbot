@@ -6,11 +6,9 @@
 #
 # All rights reserved.
 
-FROM python:3.9
-WORKDIR .
-ENV PYTHONUNBUFFERED=1
-COPY requirements.txt .
-COPY startup.sh .
-RUN bash startup.sh
-COPY . .
-CMD ["python3", "-m", "main_startup"]
+import logging
+
+from main_startup import mongo_client
+from main_startup.config_var import Config
+
+db_x = mongo_client["Friday"]
